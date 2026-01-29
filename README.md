@@ -1,6 +1,14 @@
-# ASL Sign Language Recognition System
+#  ASL Sign Language Recognition
 
-Real-time American Sign Language alphabet recognition using MobileNetV2 and Docker.
+[![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://www.python.org/)
+[![TensorFlow](https://img.shields.io/badge/TensorFlow-2.18-orange.svg)](https://www.tensorflow.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.115-green.svg)](https://fastapi.tiangolo.com/)
+[![Docker](https://img.shields.io/badge/Docker-Ready-blue.svg)](https://www.docker.com/)
+[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
+Real-time American Sign Language alphabet recognition using MobileNetV2 transfer learning and Docker deployment.
+
+---
 
 ## Project Phases
 
@@ -19,7 +27,7 @@ Real-time American Sign Language alphabet recognition using MobileNetV2 and Dock
 ### Setup
 ```bash
 # Clone repo
-git clone <your-repo>
+git clone https://github.com/yassineTAMIM/asl-sign-language-recognition.git
 cd asl-recognition
 
 # Install dependencies

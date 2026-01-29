@@ -40,8 +40,13 @@ def plot_confusion_matrix(cm, classes, filename='confusion_matrix.png'):
 
 def plot_per_class_accuracy(report_dict, classes, filename='per_class_accuracy.png'):
     """Plot per-class accuracy"""
-    # Extract f1-scores for each class
-    f1_scores = [report_dict[str(i)]['f1-score'] for i in range(len(classes))]
+    # Extract f1-scores for each class using letter names
+    f1_scores = []
+    for letter in classes:
+        if letter in report_dict:
+            f1_scores.append(report_dict[letter]['f1-score'])
+        else:
+            f1_scores.append(0.0)  # If letter not in report
     
     plt.figure(figsize=(14, 6))
     bars = plt.bar(classes, f1_scores, color='steelblue', edgecolor='black')
@@ -82,11 +87,16 @@ def analyze_errors(y_true, y_pred, classes, top_n=10):
     print("\n" + "=" * 60)
     print(f"TOP {top_n} MOST COMMON ERRORS")
     print("=" * 60)
-    print(f"{'True':<6} {'Pred':<6} {'Count':<8} {'Description'}")
-    print("-" * 60)
     
-    for (true_letter, pred_letter), count in error_counts.most_common(top_n):
-        print(f"{true_letter:<6} {pred_letter:<6} {count:<8} {true_letter} confused with {pred_letter}")
+    if len(error_counts) == 0:
+        print("No errors! Perfect predictions! 🎉")
+    else:
+        print(f"{'True':<6} {'Pred':<6} {'Count':<8} {'Description'}")
+        print("-" * 60)
+        
+        for (true_letter, pred_letter), count in error_counts.most_common(top_n):
+            print(f"{true_letter:<6} {pred_letter:<6} {count:<8} {true_letter} confused with {pred_letter}")
+    
     print("=" * 60)
 
 
@@ -134,9 +144,9 @@ def main():
     y_test_cat = tf.keras.utils.to_categorical(y_test, len(classes))
     results = model.evaluate(X_test, y_test_cat, verbose=0)
     
-    print(f"   Test Accuracy:      {results[1] * 100:.2f}%")
+    print(f"   Test Accuracy:       {results[1] * 100:.2f}%")
     print(f"   Test Top-3 Accuracy: {results[2] * 100:.2f}%")
-    print(f"   Test Loss:          {results[0]:.4f}")
+    print(f"   Test Loss:           {results[0]:.4f}")
     
     # Confusion Matrix
     print("\n5. Generating Confusion Matrix")
@@ -172,11 +182,25 @@ def main():
     print("-" * 60)
     analyze_errors(y_test, y_pred, classes)
     
-    # Summary
+    # Summary with insights
     print("\n" + "=" * 60)
     print("✓ EVALUATION COMPLETE")
     print("=" * 60)
     print(f"Overall Accuracy: {results[1] * 100:.2f}%")
+    print(f"Top-3 Accuracy:   {results[2] * 100:.2f}%")
+    
+    # Find best and worst performing classes
+    class_f1 = [(letter, report[letter]['f1-score']) for letter in classes if letter in report]
+    class_f1.sort(key=lambda x: x[1], reverse=True)
+    
+    print(f"\nBest performing letters:")
+    for letter, f1 in class_f1[:5]:
+        print(f"  {letter}: {f1*100:.1f}%")
+    
+    print(f"\nLowest performing letters:")
+    for letter, f1 in class_f1[-5:]:
+        print(f"  {letter}: {f1*100:.1f}%")
+    
     print(f"\nGenerated files:")
     print("  - confusion_matrix.png")
     print("  - per_class_accuracy.png")

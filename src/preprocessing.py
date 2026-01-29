@@ -31,10 +31,17 @@ def load_csv_data(csv_path):
     
     # Validate data
     assert pixels.shape[1] == 784, "Expected 784 pixels (28x28)"
-    assert labels.min() >= 0 and labels.max() <= 23, f"Invalid labels range: {labels.min()}-{labels.max()}"
+    
+    # Dataset has labels 0-24 (J=9 and Z=25 are missing)
+    # Valid labels: 0,1,2,3,4,5,6,7,8,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24
+    unique_labels = np.unique(labels)
+    assert labels.min() >= 0 and labels.max() <= 24, f"Invalid labels range: {labels.min()}-{labels.max()}"
+    assert 9 not in unique_labels, "Label 9 (J) should not exist in dataset"
+    assert 25 not in unique_labels, "Label 25 (Z) should not exist in dataset"
     
     print(f"   ✓ Loaded {len(labels)} samples")
-    print(f"   ✓ Unique labels: {np.unique(labels)}")
+    print(f"   ✓ Unique labels: {unique_labels}")
+    print(f"   ✓ Label count: {len(unique_labels)} (should be 24)")
     
     return pixels, labels
 
@@ -110,20 +117,25 @@ def main():
     print(f"   Output channels: 3 (RGB)")
     
     X_train = process_images_batch(X_train_raw, target_size, "Processing train")
+    # Convert labels: 0-8 stay same, 10-24 become 9-23
     y_train = np.array([label_to_index(label) for label in y_train_raw])
     
     X_test = process_images_batch(X_test_raw, target_size, "Processing test")
     y_test = np.array([label_to_index(label) for label in y_test_raw])
     
     print(f"\n   ✓ Processed shape: {X_train.shape}")
+    print(f"   ✓ Label mapping complete: {len(np.unique(y_train))} classes (0-23)")
     
     # Validate processed data
     print("\n4. Validating Processed Data")
     print("-" * 60)
     assert X_train.min() >= 0 and X_train.max() <= 1, "Invalid normalization"
     assert X_train.shape[1:] == (target_size, target_size, 3), "Invalid shape"
+    assert y_train.min() == 0 and y_train.max() == 23, f"Invalid mapped labels: {y_train.min()}-{y_train.max()}"
+    assert len(np.unique(y_train)) == 24, f"Expected 24 classes, got {len(np.unique(y_train))}"
     print("   ✓ Normalization correct [0, 1]")
     print("   ✓ Shape correct")
+    print("   ✓ Labels correctly mapped to 0-23")
     print("   ✓ All validations passed")
     
     # Split train into train/val
@@ -159,6 +171,8 @@ def main():
     print(f"Val:   {X_val.shape[0]:,} samples")
     print(f"Test:  {X_test.shape[0]:,} samples")
     print(f"Total: {X_train.shape[0] + X_val.shape[0] + X_test.shape[0]:,} samples")
+    print(f"\nClasses: 24 letters (A-I, K-Y)")
+    print(f"Missing: J (requires motion), Z (requires motion)")
     print(f"\nData saved to: {output_dir}/")
     print("=" * 60)
 

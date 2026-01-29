@@ -34,13 +34,27 @@ def get_class_mapping(config):
 def label_to_index(label):
     """Convert dataset label to class index.
     
-    The Sign Language MNIST dataset has 24 classes (0-23)
-    with J(9) and Z(25) already excluded from the original alphabet.
-    Labels are: 0=A, 1=B, 2=C, ..., 8=I, 9=K (not J), ..., 23=Y (not Z)
+    The Sign Language MNIST dataset labels are 0-24 (25 labels total):
+    - 0-8: A-I (9 letters)
+    - 9: J (MISSING - no data for J)
+    - 10-24: K-Y (15 letters)
+    - 25: Z (MISSING - no data for Z)
     
-    So we use direct mapping without any adjustment.
+    We need to map these 24 actual labels to indices 0-23:
+    - 0-8 → 0-8 (A-I)
+    - 10-24 → 9-23 (K-Y)
     """
-    return int(label)
+    label = int(label)
+    
+    # If label is 0-8, keep as is (A-I)
+    if label <= 8:
+        return label
+    # If label is 10-24, shift down by 1 (K-Y become indices 9-23)
+    elif label >= 10:
+        return label - 1
+    else:
+        # This should never happen (label 9 = J doesn't exist in dataset)
+        raise ValueError(f"Invalid label {label}. Label 9 (J) should not exist in dataset.")
 
 
 def index_to_letter(index, config):

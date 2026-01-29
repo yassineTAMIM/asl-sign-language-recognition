@@ -42,7 +42,9 @@ class TrainingLogger(tf.keras.callbacks.Callback):
         print(f"\nEpoch {epoch + 1}:")
         print(f"  Train Loss: {logs['loss']:.4f} | Train Acc: {logs['accuracy']:.4f}")
         print(f"  Val Loss:   {logs['val_loss']:.4f} | Val Acc:   {logs['val_accuracy']:.4f}")
-        print(f"  LR: {float(self.model.optimizer.lr):.6f}")
+        # Fix for TensorFlow 2.x: use learning_rate instead of lr
+        lr = float(tf.keras.backend.get_value(self.model.optimizer.learning_rate))
+        print(f"  LR: {lr:.6f}")
 
 
 def save_history(history, filename='training_history.json'):

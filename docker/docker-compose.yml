@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  # Training service
+  trainer:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.train
+    container_name: asl-trainer
+    volumes:
+      - ../data:/app/data
+      - ../models:/app/models
+    environment:
+      - PYTHONUNBUFFERED=1
+    deploy:
+      resources:
+        limits:
+          cpus: '4'
+          memory: 8G
+
+  # API service
+  api:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.api
+    container_name: asl-api
+    ports:
+      - "8000:8000"
+    volumes:
+      - ../models:/app/models
+    restart: unless-stopped
+
+  # Frontend service
+  frontend:
+    image: nginx:alpine
+    container_name: asl-frontend
+    ports:
+      - "80:80"
+    volumes:
+      - ../frontend:/usr/share/nginx/html:ro
+    depends_on:
+      - api

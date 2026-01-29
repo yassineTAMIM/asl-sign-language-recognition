@@ -1,0 +1,22 @@
+# Core ML
+tensorflow==2.20.0
+numpy>=2.0.0
+
+# Image Processing
+opencv-python>=4.10.0
+Pillow>=10.0.0
+
+# Data
+pandas>=2.2.0
+scikit-learn>=1.5.0
+
+# Visualization
+matplotlib>=3.9.0
+
+# API
+fastapi>=0.115.0
+uvicorn[standard]>=0.32.0
+python-multipart>=0.0.12
+
+# Config
+PyYAML>=6.0.0

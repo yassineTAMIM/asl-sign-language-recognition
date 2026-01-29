@@ -1,0 +1,23 @@
+# Training container
+FROM python:3.10-slim
+
+WORKDIR /app
+
+# System dependencies
+RUN apt-get update && apt-get install -y \
+    libopencv-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Python dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy source
+COPY config.yaml .
+COPY src/ ./src/
+
+# Volumes
+VOLUME ["/app/data", "/app/models"]
+
+# Default command
+CMD ["python", "src/train.py"]

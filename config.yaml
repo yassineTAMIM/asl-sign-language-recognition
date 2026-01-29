@@ -1,0 +1,59 @@
+# Dataset
+data:
+  raw_path: "data/raw"
+  processed_path: "data/processed"
+  img_size: 64
+  train_split: 0.8
+  val_split: 0.1
+  test_split: 0.1
+
+# Model
+model:
+  name: "MobileNetV2"
+  input_shape: [64, 64, 3]
+  num_classes: 24
+  dropout: 0.3
+  dense_units: 128
+
+# Training
+training:
+  epochs: 30
+  batch_size: 32
+  learning_rate: 0.001
+  fine_tune_epochs: 10
+  fine_tune_lr: 0.0001
+
+# Paths
+paths:
+  model_checkpoint: "models/checkpoints/best_model.h5"
+  final_model: "models/final/asl_model.h5"
+
+# Random seed
+seed: 42
+
+# Classes (24 letters, no J and Z)
+classes:
+  - A
+  - B
+  - C
+  - D
+  - E
+  - F
+  - G
+  - H
+  - I
+  - K
+  - L
+  - M
+  - N
+  - O
+  - P
+  - Q
+  - R
+  - S
+  - T
+  - U
+  - V
+  - W
+  - X
+  - Y

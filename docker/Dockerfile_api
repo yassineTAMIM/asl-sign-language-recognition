@@ -1,11 +1,18 @@
-# API container
+# API container with MediaPipe support
 FROM python:3.10-slim
 
 WORKDIR /app
 
-# System dependencies
+# System dependencies for OpenCV and MediaPipe
 RUN apt-get update && apt-get install -y \
     libopencv-dev \
+    libglib2.0-0 \
+    libsm6 \
+    libxext6 \
+    libxrender-dev \
+    libgomp1 \
+    libglib2.0-0 \
+    libgl1-mesa-glx \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy requirements and install
@@ -23,7 +30,7 @@ RUN mkdir -p models/final
 # Expose port
 EXPOSE 8000
 
-# Health check (using urllib instead of requests)
+# Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
     CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')" || exit 1
 

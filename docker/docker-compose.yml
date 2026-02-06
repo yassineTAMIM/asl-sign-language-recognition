@@ -1,28 +1,5 @@
-version: '3.8'
-
 services:
-  # Training service
-  trainer:
-    build:
-      context: ..
-      dockerfile: docker/Dockerfile.train
-    container_name: asl-trainer
-    volumes:
-      - ../data:/app/data
-      - ../models:/app/models
-      - ../logs:/app/logs
-    environment:
-      - PYTHONUNBUFFERED=1
-      - TF_CPP_MIN_LOG_LEVEL=2
-    deploy:
-      resources:
-        limits:
-          cpus: '4'
-          memory: 8G
-    networks:
-      - asl-network
-
-  # API service
+  # API service - Runs the FastAPI server
   api:
     build:
       context: ..
@@ -37,8 +14,6 @@ services:
       - PYTHONUNBUFFERED=1
       - TF_CPP_MIN_LOG_LEVEL=2
     restart: unless-stopped
-    depends_on:
-      - trainer
     healthcheck:
       test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
       interval: 30s
@@ -48,7 +23,7 @@ services:
     networks:
       - asl-network
 
-  # Frontend service
+  # Frontend service - Serves the web interface
   frontend:
     image: nginx:alpine
     container_name: asl-frontend
@@ -66,7 +41,3 @@ services:
 networks:
   asl-network:
     driver: bridge
-
-volumes:
-  models_data:
-  training_data:

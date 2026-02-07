@@ -1,0 +1,53 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+*.egg-info/
+
+# Data (handled by volumes)
+data/raw/*
+data/processed/*
+
+# Models (handled by volumes)
+models/checkpoints/*
+models/final/*.h5
+
+# Logs
+logs/
+*.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Git
+.git/
+.gitignore
+
+# Temporary
+*.tmp
+*.bak
+*.cache
+
+# Demo files
+demo_test_images/
+frontend/
+
+# Documentation
+*.md
+!README.md
+
+# Test files
+test_*.py
+*_test.py

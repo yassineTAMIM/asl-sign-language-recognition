@@ -1,23 +1,38 @@
-# Training container
+# Dockerfile for ASL Model Training
+# Phase 3 du projet: Entraînement avec Docker
+
 FROM python:3.10-slim
 
+# Metadata
+LABEL maintainer="ASL Recognition Team"
+LABEL description="Docker container for training ASL recognition model"
+LABEL version="1.0"
+
+# Set working directory
 WORKDIR /app
 
-# System dependencies
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
-    libopencv-dev \
+    libgomp1 \
     && rm -rf /var/lib/apt/lists/*
 
-# Python dependencies
+# Copy requirements
 COPY requirements.txt .
+
+# Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy source
+# Copy project files
 COPY config.yaml .
 COPY src/ ./src/
+COPY data/ ./data/
 
-# Volumes
-VOLUME ["/app/data", "/app/models"]
+# Create directories for outputs
+RUN mkdir -p models/checkpoints models/final logs
 
-# Default command
-CMD ["python", "src/train.py"]
+# Environment variables
+ENV PYTHONUNBUFFERED=1
+ENV TF_CPP_MIN_LOG_LEVEL=2
+
+# Default command: run preprocessing + training
+CMD ["sh", "-c", "python src/preprocessing.py && python src/train.py"]

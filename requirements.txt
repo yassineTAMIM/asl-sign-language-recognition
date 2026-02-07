@@ -28,3 +28,5 @@ PyYAML>=6.0.0
 # Testing
 requests>=2.32.0
 pytest>=8.0.0
+
+mediapipe>=0.10.0

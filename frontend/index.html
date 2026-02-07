@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ASL Recognition - Improved</title>
+    <title>ASL Recognition - Demo</title>
     <style>
         * {
             margin: 0;
@@ -12,652 +12,380 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            padding: 20px;
+            padding: 40px 20px;
         }
 
         .container {
-            max-width: 1600px;
+            max-width: 1200px;
             margin: 0 auto;
             background: white;
-            border-radius: 24px;
+            border-radius: 20px;
             padding: 40px;
-            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.25);
-        }
-
-        header {
-            text-align: center;
-            margin-bottom: 40px;
-            border-bottom: 2px solid #f0f0f0;
-            padding-bottom: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
         }
 
         h1 {
-            font-size: 42px;
-            font-weight: 700;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 12px;
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2.5em;
         }
 
         .subtitle {
-            color: #666;
-            font-size: 16px;
-        }
-
-        .controls {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-bottom: 35px;
-            flex-wrap: wrap;
-        }
-
-        button {
-            padding: 14px 32px;
-            font-size: 15px;
-            font-weight: 600;
-            border: none;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
-        }
-
-        .btn-secondary {
-            background: white;
-            color: #667eea;
-            border: 2px solid #667eea;
-        }
-
-        .btn-secondary:hover {
-            background: #f8f9ff;
-            transform: translateY(-2px);
-        }
-
-        .btn-stop {
-            background: #ff4757;
-            color: white;
-        }
-
-        .btn-flip {
-            background: #ffa502;
-            color: white;
-        }
-
-        .btn-flip:hover {
-            background: #ff8c00;
-        }
-
-        .status-bar {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            padding: 12px 24px;
-            background: #f8f9fa;
-            border-radius: 12px;
-            margin-bottom: 35px;
-            font-size: 14px;
-            color: #666;
-        }
-
-        .status-bar.active {
-            background: linear-gradient(135deg, #d4edda, #c3e6cb);
-            color: #155724;
-        }
-
-        .status-bar.error {
-            background: linear-gradient(135deg, #f8d7da, #f5c6cb);
-            color: #721c24;
-        }
-
-        .status-indicator {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background: #999;
-            animation: pulse 2s infinite;
-        }
-
-        .status-bar.active .status-indicator {
-            background: #28a745;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-
-        .pipeline-container {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 20px;
-            margin-bottom: 35px;
-        }
-
-        .pipeline-stage {
-            background: #f8f9fa;
-            border-radius: 16px;
-            padding: 20px;
             text-align: center;
-            transition: all 0.3s ease;
-            border: 2px solid transparent;
+            color: #666;
+            margin-bottom: 40px;
+            font-size: 1.1em;
         }
 
-        .pipeline-stage:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
-            border-color: #667eea;
+        .upload-area {
+            border: 3px dashed #667eea;
+            border-radius: 15px;
+            padding: 60px;
+            text-align: center;
+            background: #f8f9ff;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 40px;
         }
 
-        .stage-number {
-            display: inline-block;
-            width: 32px;
-            height: 32px;
-            line-height: 32px;
-            border-radius: 50%;
+        .upload-area:hover {
+            background: #f0f2ff;
+            border-color: #764ba2;
+        }
+
+        .upload-area.dragover {
+            background: #e8ebff;
+            border-color: #764ba2;
+        }
+
+        .upload-icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .btn {
             background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
-            font-weight: 700;
-            font-size: 16px;
-            margin-bottom: 12px;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 25px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 10px;
         }
 
-        .stage-title {
-            font-size: 14px;
-            font-weight: 600;
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .result-container {
+            display: none;
+            margin-top: 40px;
+        }
+
+        .result-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .result-box {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+        }
+
+        .result-box h3 {
             color: #333;
             margin-bottom: 15px;
-            min-height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            font-size: 1.2em;
         }
 
-        .stage-content {
-            position: relative;
+        .result-box img {
             width: 100%;
-            padding-top: 100%;
-            background: white;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            border-radius: 10px;
+            border: 2px solid #ddd;
         }
 
-        .stage-content video,
-        .stage-content canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .stage-content video.flipped,
-        .stage-content canvas.flipped {
-            transform: scaleX(-1);
-        }
-
-        .stage-description {
-            font-size: 12px;
-            color: #999;
-            margin-top: 12px;
-        }
-
-        .result-stage .stage-content {
+        .prediction-box {
             background: linear-gradient(135deg, #667eea, #764ba2);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 0;
-        }
-
-        .result-letter {
-            font-size: 80px;
-            font-weight: 700;
             color: white;
-            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-        }
-
-        .result-confidence {
-            font-size: 24px;
-            font-weight: 600;
-            color: rgba(255, 255, 255, 0.9);
-        }
-
-        .top3-container {
-            background: #f8f9fa;
-            border-radius: 16px;
-            padding: 25px;
-            margin-bottom: 20px;
-        }
-
-        .top3-title {
-            font-size: 16px;
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 20px;
+            border-radius: 15px;
+            padding: 40px;
             text-align: center;
         }
 
-        .top3-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
+        .prediction-letter {
+            font-size: 5em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .prediction-confidence {
+            font-size: 2em;
+            opacity: 0.9;
+        }
+
+        .top3 {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 30px;
         }
 
         .top3-item {
             background: white;
+            border-radius: 10px;
             padding: 20px;
-            border-radius: 12px;
-            text-align: center;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            min-width: 150px;
         }
 
         .top3-letter {
-            font-size: 36px;
-            font-weight: 700;
+            font-size: 2.5em;
+            font-weight: bold;
             color: #667eea;
-            margin-bottom: 8px;
         }
 
-        .top3-confidence {
-            font-size: 18px;
-            font-weight: 600;
+        .top3-conf {
             color: #666;
+            font-size: 1.2em;
         }
 
-        .top3-bar {
-            height: 6px;
-            background: #e9ecef;
-            border-radius: 3px;
-            margin-top: 10px;
-            overflow: hidden;
+        .error {
+            background: #ff6b6b;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            display: none;
         }
 
-        .top3-bar-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #667eea, #764ba2);
-            border-radius: 3px;
-            transition: width 0.5s ease;
+        .loading {
+            text-align: center;
+            padding: 40px;
+            display: none;
         }
 
-        /* Helper section */
-        .helper {
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .info-box {
             background: #fff3cd;
             border: 2px solid #ffc107;
-            border-radius: 12px;
+            border-radius: 10px;
             padding: 20px;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
         }
 
-        .helper h3 {
+        .info-box h3 {
             color: #856404;
             margin-bottom: 10px;
-            font-size: 18px;
         }
 
-        .helper p {
+        .info-box p {
             color: #856404;
-            font-size: 14px;
             line-height: 1.6;
-        }
-
-        .helper ul {
-            margin: 10px 0 0 20px;
-            color: #856404;
-        }
-
-        footer {
-            text-align: center;
-            padding-top: 30px;
-            border-top: 2px solid #f0f0f0;
-            color: #999;
-            font-size: 13px;
-        }
-
-        @media (max-width: 1400px) {
-            .pipeline-container {
-                grid-template-columns: repeat(3, 1fr);
-            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <header>
-            <h1>🤟 ASL Recognition System</h1>
-            <p class="subtitle">Real-time Hand Detection with Improved Preprocessing</p>
-        </header>
+        <h1>🤟 ASL Recognition Demo</h1>
+        <p class="subtitle">Upload ASL hand sign images for recognition</p>
 
-        <!-- Helper Box -->
-        <div class="helper">
-            <h3>💡 Getting Better Results:</h3>
-            <ul>
-                <li><strong>Mirror Issue?</strong> Click "Flip Camera" if letters are backwards</li>
-                <li><strong>Letter A:</strong> Closed fist, thumb pointing UP (to the side)</li>
-                <li><strong>Lighting:</strong> Use bright, even lighting</li>
-                <li><strong>Background:</strong> Plain wall or desk works best</li>
-                <li><strong>Distance:</strong> Show full hand, not too close to camera</li>
-            </ul>
+        <div class="info-box">
+            <h3>📁 Test Images Available</h3>
+            <p>Use images from the test dataset: <code>data/raw/sign_mnist_test.csv</code><br>
+            Or upload any ASL hand sign image (A-I, K-Y)</p>
         </div>
 
-        <div class="controls">
-            <button class="btn-primary" id="startBtn" onclick="toggleContinuous()">
-                <span id="startBtnText">▶ Start Continuous</span>
-            </button>
-            <button class="btn-secondary" onclick="captureOnce()">
-                📸 Capture Once
-            </button>
-            <button class="btn-flip" onclick="toggleFlip()">
-                🔄 Flip Camera
-            </button>
+        <div class="upload-area" id="uploadArea" onclick="document.getElementById('fileInput').click()">
+            <div class="upload-icon">📤</div>
+            <h2>Click or Drag & Drop Image</h2>
+            <p style="margin-top: 10px; color: #666;">Supports: JPG, PNG</p>
+            <input type="file" id="fileInput" accept="image/*">
         </div>
 
-        <div class="status-bar" id="statusBar">
-            <div class="status-indicator"></div>
-            <span id="statusText">Initializing camera...</span>
+        <div style="text-align: center;">
+            <button class="btn" id="predictBtn" disabled>🔮 Predict Sign</button>
+            <button class="btn" onclick="location.reload()">🔄 Reset</button>
         </div>
 
-        <div class="pipeline-container">
-            <div class="pipeline-stage">
-                <div class="stage-number">1</div>
-                <h3 class="stage-title">Camera Feed</h3>
-                <div class="stage-content">
-                    <video id="video" autoplay playsinline muted></video>
-                </div>
-                <p class="stage-description">Live webcam</p>
-            </div>
-
-            <div class="pipeline-stage">
-                <div class="stage-number">2</div>
-                <h3 class="stage-title">Hand Detection</h3>
-                <div class="stage-content">
-                    <canvas id="handDetection"></canvas>
-                </div>
-                <p class="stage-description">Skin detection</p>
-            </div>
-
-            <div class="pipeline-stage">
-                <div class="stage-number">3</div>
-                <h3 class="stage-title">Hand Region</h3>
-                <div class="stage-content">
-                    <canvas id="handCrop"></canvas>
-                </div>
-                <p class="stage-description">Isolated hand</p>
-            </div>
-
-            <div class="pipeline-stage">
-                <div class="stage-number">4</div>
-                <h3 class="stage-title">Preprocessed</h3>
-                <div class="stage-content">
-                    <canvas id="modelInput"></canvas>
-                </div>
-                <p class="stage-description">Clean B&W (64×64)</p>
-            </div>
-
-            <div class="pipeline-stage result-stage">
-                <div class="stage-number">5</div>
-                <h3 class="stage-title">Prediction</h3>
-                <div class="stage-content">
-                    <div class="result-letter" id="resultLetter">-</div>
-                    <div class="result-confidence" id="resultConfidence">---%</div>
-                </div>
-                <p class="stage-description">Classification</p>
-            </div>
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Processing image...</p>
         </div>
 
-        <div class="top3-container">
-            <h3 class="top3-title">Top 3 Predictions</h3>
-            <div class="top3-grid" id="top3Grid">
-                <div class="top3-item">
-                    <div class="top3-letter">-</div>
-                    <div class="top3-confidence">---%</div>
-                    <div class="top3-bar">
-                        <div class="top3-bar-fill" style="width: 0%"></div>
-                    </div>
+        <div class="error" id="error"></div>
+
+        <div class="result-container" id="results">
+            <h2 style="margin-bottom: 20px;">Results</h2>
+            
+            <div class="result-grid">
+                <div class="result-box">
+                    <h3>Original Image</h3>
+                    <img id="originalImg" src="" alt="Original">
                 </div>
-                <div class="top3-item">
-                    <div class="top3-letter">-</div>
-                    <div class="top3-confidence">---%</div>
-                    <div class="top3-bar">
-                        <div class="top3-bar-fill" style="width: 0%"></div>
-                    </div>
-                </div>
-                <div class="top3-item">
-                    <div class="top3-letter">-</div>
-                    <div class="top3-confidence">---%</div>
-                    <div class="top3-bar">
-                        <div class="top3-bar-fill" style="width: 0%"></div>
-                    </div>
+                <div class="result-box">
+                    <h3>Preprocessed (Model Input)</h3>
+                    <img id="processedImg" src="" alt="Processed">
                 </div>
             </div>
-        </div>
 
-        <footer>
-            <p>Powered by <strong>MobileNetV2</strong> + <strong>OpenCV</strong> • Improved Preprocessing v3.1</p>
-        </footer>
+            <div class="prediction-box">
+                <div>Predicted Sign</div>
+                <div class="prediction-letter" id="predLetter">-</div>
+                <div class="prediction-confidence" id="predConf">---%</div>
+            </div>
+
+            <div class="top3" id="top3"></div>
+        </div>
     </div>
 
     <script>
-        const video = document.getElementById('video');
         const API_URL = 'http://localhost:8000';
-        let isRunning = false;
-        let predictionInterval;
-        let isProcessing = false;
-        let isFlipped = false;
+        let selectedFile = null;
 
-        async function startCamera() {
-            console.log('Starting camera...');
-            try {
-                const stream = await navigator.mediaDevices.getUserMedia({ 
-                    video: { 
-                        width: { ideal: 1280 },
-                        height: { ideal: 720 }
-                    } 
-                });
-                video.srcObject = stream;
-                console.log('✓ Camera started');
-                updateStatus('Camera ready • Try "Flip Camera" if signs are backwards', 'active');
-            } catch (err) {
-                console.error('Camera error:', err);
-                updateStatus('❌ Camera access denied', 'error');
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const predictBtn = document.getElementById('predictBtn');
+        const loading = document.getElementById('loading');
+        const error = document.getElementById('error');
+        const results = document.getElementById('results');
+
+        // Drag & drop
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                handleFile(files[0]);
             }
-        }
+        });
 
-        function toggleFlip() {
-            isFlipped = !isFlipped;
-            video.classList.toggle('flipped');
-            console.log(`Camera ${isFlipped ? 'flipped' : 'normal'}`);
-            updateStatus(`Camera ${isFlipped ? 'flipped' : 'normal'} • Try making sign again`, 'active');
-        }
-
-        function toggleContinuous() {
-            if (isRunning) {
-                stopContinuous();
-            } else {
-                startContinuous();
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                handleFile(e.target.files[0]);
             }
-        }
+        });
 
-        function startContinuous() {
-            console.log('Starting continuous mode');
-            isRunning = true;
-            const btn = document.getElementById('startBtn');
-            const btnText = document.getElementById('startBtnText');
-            
-            btn.classList.remove('btn-primary');
-            btn.classList.add('btn-stop');
-            btnText.textContent = '⏹ Stop Continuous';
-            
-            updateStatus('🔴 Running continuous prediction...', 'active');
-            
-            predictionInterval = setInterval(async () => {
-                if (!isProcessing) {
-                    await captureAndPredict();
-                }
-            }, 500);
-        }
-
-        function stopContinuous() {
-            console.log('Stopping continuous mode');
-            isRunning = false;
-            clearInterval(predictionInterval);
-            
-            const btn = document.getElementById('startBtn');
-            const btnText = document.getElementById('startBtnText');
-            
-            btn.classList.remove('btn-stop');
-            btn.classList.add('btn-primary');
-            btnText.textContent = '▶ Start Continuous';
-            
-            updateStatus('⏸ Stopped', '');
-        }
-
-        async function captureOnce() {
-            console.log('Capturing single frame');
-            updateStatus('📸 Processing...', '');
-            await captureAndPredict();
-        }
-
-        async function captureAndPredict() {
-            if (isProcessing) return;
-            
-            isProcessing = true;
-
-            const canvas = document.createElement('canvas');
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
-            
-            const ctx = canvas.getContext('2d');
-            
-            // If flipped, flip the capture
-            if (isFlipped) {
-                ctx.translate(canvas.width, 0);
-                ctx.scale(-1, 1);
+        function handleFile(file) {
+            if (!file.type.startsWith('image/')) {
+                showError('Please select an image file');
+                return;
             }
-            
-            ctx.drawImage(video, 0, 0);
 
-            canvas.toBlob(async (blob) => {
-                try {
-                    const formData = new FormData();
-                    formData.append('file', blob, 'frame.jpg');
+            selectedFile = file;
+            predictBtn.disabled = false;
 
-                    const response = await fetch(`${API_URL}/predict_pipeline`, {
-                        method: 'POST',
-                        body: formData
-                    });
-
-                    if (!response.ok) {
-                        throw new Error(`API error: ${response.status}`);
-                    }
-
-                    const result = await response.json();
-
-                    if (!result.success) {
-                        updateStatus(`⚠ ${result.error || 'No hand detected'}`, 'error');
-                        
-                        if (result.pipeline) {
-                            updateCanvas('handDetection', result.pipeline.hand_detected);
-                        }
-                        
-                        return;
-                    }
-
-                    // Update prediction
-                    document.getElementById('resultLetter').textContent = result.letter;
-                    document.getElementById('resultConfidence').textContent = result.percentage;
-
-                    // Update pipeline
-                    if (result.pipeline) {
-                        updateCanvas('handDetection', result.pipeline.hand_detected);
-                        updateCanvas('handCrop', result.pipeline.hand_cropped);
-                        updateCanvas('modelInput', result.pipeline.model_input);
-                    }
-
-                    // Update top 3
-                    if (result.top3) {
-                        updateTop3(result.top3);
-                    }
-
-                    updateStatus(`✓ Detected: ${result.letter} (${result.percentage})`, 'active');
-
-                } catch (err) {
-                    console.error('Error:', err);
-                    updateStatus(`❌ Error: ${err.message}`, 'error');
-                } finally {
-                    isProcessing = false;
-                }
-            }, 'image/jpeg', 0.9);
-        }
-
-        function updateCanvas(canvasId, base64Image) {
-            if (!base64Image) return;
-            
-            const canvas = document.getElementById(canvasId);
-            const ctx = canvas.getContext('2d');
-            const img = new Image();
-
-            img.onload = () => {
-                canvas.width = img.width;
-                canvas.height = img.height;
-                ctx.drawImage(img, 0, 0);
+            // Preview
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                document.getElementById('originalImg').src = e.target.result;
             };
+            reader.readAsDataURL(file);
 
-            img.src = 'data:image/jpeg;base64,' + base64Image;
+            uploadArea.innerHTML = `
+                <div class="upload-icon">✅</div>
+                <h2>Image Selected</h2>
+                <p style="margin-top: 10px; color: #666;">${file.name}</p>
+            `;
         }
 
-        function updateTop3(top3) {
-            const items = document.querySelectorAll('.top3-item');
-            
-            top3.forEach((pred, index) => {
-                if (items[index]) {
-                    const letter = items[index].querySelector('.top3-letter');
-                    const confidence = items[index].querySelector('.top3-confidence');
-                    const barFill = items[index].querySelector('.top3-bar-fill');
-                    
-                    letter.textContent = pred.letter;
-                    confidence.textContent = pred.percentage;
-                    barFill.style.width = `${pred.confidence * 100}%`;
+        predictBtn.addEventListener('click', async () => {
+            if (!selectedFile) return;
+
+            loading.style.display = 'block';
+            error.style.display = 'none';
+            results.style.display = 'none';
+
+            try {
+                const formData = new FormData();
+                formData.append('file', selectedFile);
+
+                const response = await fetch(`${API_URL}/predict_pipeline`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    displayResults(data);
+                } else {
+                    showError(data.error || 'Prediction failed');
                 }
-            });
-        }
 
-        function updateStatus(message, className) {
-            const statusBar = document.getElementById('statusBar');
-            const statusText = document.getElementById('statusText');
-            
-            statusText.textContent = message;
-            statusBar.className = 'status-bar ' + className;
-        }
-
-        // Initialize
-        window.addEventListener('load', () => {
-            startCamera();
-        });
-
-        window.addEventListener('beforeunload', () => {
-            if (video.srcObject) {
-                video.srcObject.getTracks().forEach(track => track.stop());
+            } catch (err) {
+                showError('API Error: ' + err.message);
+            } finally {
+                loading.style.display = 'none';
             }
         });
+
+        function displayResults(data) {
+            // Show processed image
+            if (data.pipeline && data.pipeline.model_input) {
+                document.getElementById('processedImg').src = 'data:image/jpeg;base64,' + data.pipeline.model_input;
+            }
+
+            // Show prediction
+            document.getElementById('predLetter').textContent = data.letter;
+            document.getElementById('predConf').textContent = data.percentage;
+
+            // Show top 3
+            const top3Container = document.getElementById('top3');
+            top3Container.innerHTML = data.top3.map(item => `
+                <div class="top3-item">
+                    <div class="top3-letter">${item.letter}</div>
+                    <div class="top3-conf">${item.percentage}</div>
+                </div>
+            `).join('');
+
+            results.style.display = 'block';
+        }
+
+        function showError(message) {
+            error.textContent = '❌ ' + message;
+            error.style.display = 'block';
+        }
     </script>
 </body>
 </html>

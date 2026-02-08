@@ -1,5 +1,3 @@
-version: '3.8'
-
 # Docker Compose for ASL Recognition Project
 # Orchestration des services: Training + API
 
@@ -8,7 +6,7 @@ services:
   trainer:
     build:
       context: .
-      dockerfile: Dockerfile.train
+      dockerfile: docker/Dockerfile.train
     container_name: asl-trainer
     volumes:
       - ./data:/app/data
@@ -19,19 +17,17 @@ services:
       - TF_CPP_MIN_LOG_LEVEL=2
     networks:
       - asl-network
-    # CPU only for training
-    # For GPU: add runtime: nvidia and deploy.resources.reservations.devices
     
   # Service 2: API Container
   api:
     build:
       context: .
-      dockerfile: Dockerfile.api
+      dockerfile: docker/Dockerfile.api
     container_name: asl-api
     ports:
       - "8000:8000"
     volumes:
-      - ./models:/app/models:ro  # Read-only model access
+      - ./models:/app/models:ro
       - ./config.yaml:/app/config.yaml:ro
     environment:
       - PYTHONUNBUFFERED=1
@@ -40,18 +36,6 @@ services:
     networks:
       - asl-network
     restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 5s
-
-# Volumes persistants
-volumes:
-  data:
-  models:
-  logs:
 
 # Network isolé
 networks:

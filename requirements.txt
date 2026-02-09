@@ -2,8 +2,8 @@
 tensorflow==2.20.0
 numpy>=2.0.0
 
-# Image Processing
-opencv-python>=4.10.0
+# Image Processing - headless version for Docker
+opencv-python-headless>=4.10.0
 Pillow>=10.0.0
 
 # Data Science
@@ -28,5 +28,3 @@ PyYAML>=6.0.0
 # Testing
 requests>=2.32.0
 pytest>=8.0.0
-
-mediapipe>=0.10.0
